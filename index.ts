@@ -2,6 +2,7 @@ const path = require("path");
 const fs = require("fs-extra");
 require("dotenv").config();
 
+import { resizeMedia } from "./app/createQuestionsMedia";
 // import {
 //   prepareDataForChatGpt,
 //   askChatGpt,
@@ -31,9 +32,8 @@ const start = async () => {
 
   try {
     // fs.removeSync(PHP_API);
-
-    await unzipToFolder(FOLDER_WITH_ZIPPED_FILES, FOLDER_WITH_UNZIPPED_FILES);
-    // await resizeMedia();
+    // await unzipToFolder(FOLDER_WITH_ZIPPED_FILES, FOLDER_WITH_UNZIPPED_FILES);
+    await resizeMedia();
     // const questionsFromExcel = extractExcelData();
     // console.log("questionsFromExcel.length", questionsFromExcel.length,questionsFromExcel[0]);
     // createApiFile("questions-from-excel", { questionsFromExcel });

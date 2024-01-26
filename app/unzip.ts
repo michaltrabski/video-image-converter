@@ -14,8 +14,9 @@ export const unzip = async (FOLDER_WITH_ZIPPED_FILES: string, FOLDER_WITH_UNZIPP
   fs.ensureDirSync(FOLDER_WITH_ZIPPED_FILES);
   fs.ensureDirSync(FOLDER_WITH_UNZIPPED_FILES);
 
-  log("1). take files (zipped or unzipped) from folder:", "\n\n", FOLDER_WITH_ZIPPED_FILES);
-  log("2). move files (unzip if zipped) to folder:", "\n\n", FOLDER_WITH_UNZIPPED_FILES);
+  log(`1). take files (zipped or unzipped) from folder:\n    -> ${FOLDER_WITH_ZIPPED_FILES}`, "\n\n");
+  // log("2). move files (unzip if zipped) to folder:", "\n\n", FOLDER_WITH_UNZIPPED_FILES);
+  log(`2). move files (unzip if zipped) to folder:\n    -> ${FOLDER_WITH_UNZIPPED_FILES}`, "\n\n");
 
   await unzipFiles(FOLDER_WITH_ZIPPED_FILES, FOLDER_WITH_UNZIPPED_FILES);
   log("3). All files are moved and unzipped if needed!", "\n\n");

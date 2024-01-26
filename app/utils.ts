@@ -93,14 +93,15 @@ export const getEnv = (variableName: string) => {
   return process.env[variableName] ?? "";
 };
 
-// // export function isVideo(fileName: string) {
-// //   const videoExtensions = [".wmv", ".mp4", ".WMV", ".MP4"];
+export function isVideo(fileName: string) {
+  const videoExtensions = [".wmv", ".mp4", ".WMV", ".MP4"];
 
-// //   return videoExtensions.some((ext) => fileName.endsWith(ext));
-// // }
-// // export function mediaNameWithoutExtention(mediaName: string) {
-// //   return mediaName.split(".").slice(0, -1).join(".");
-// // }
+  return videoExtensions.some((ext) => fileName.endsWith(ext));
+}
+
+export function mediaNameWithoutExtention(mediaName: string) {
+  return mediaName.split(".").slice(0, -1).join(".");
+}
 
 // // export function normalizeABCTAKNIE(answer: string): RightAnswer | never {
 // //   if (answer.toLowerCase() === "tak" || answer.toLowerCase() === "t") {

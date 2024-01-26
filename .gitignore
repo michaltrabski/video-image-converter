@@ -2,6 +2,7 @@
 build/
 media-input/
 media-output/
+media-unzipped/
 api/
 media/
 zip/

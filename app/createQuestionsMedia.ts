@@ -7,41 +7,53 @@ import { getEnv, isVideo, mediaNameWithoutExtention } from "./utils";
 
 export const resizeMedia = async () => {
   const mediaWidth = +getEnv("TRANSFORMED_MEDIA_WIDTH");
-  const inputFolder = path.resolve(__dirname, "../", getEnv("ABSOLUTE_PATH_FOLDER_FILES_BEFORE_PROCESSING"));
-  const outputFolder = path.resolve(__dirname, "../", getEnv("ABSOLUTE_PATH_FOLDER_FILES_AFTER_PROCESSING"));
+  const unzippedFolder = path.resolve(__dirname, "../", getEnv("FOLDER_WITH_UNZIPPED_FILES"));
+  const outputFolder = path.resolve(__dirname, "../", getEnv("FOLDER_WITH_PROCESSED_FILES"));
 
-  fs.ensureDirSync(inputFolder);
+  fs.ensureDirSync(unzippedFolder);
   fs.ensureDirSync(outputFolder);
-  console.log("inputFolder", inputFolder);
 
   // TASK 1 - start processing media
-  for await (const originalFileName of fs.readdirSync(inputFolder)) {
+  for await (const originalFileName of fs.readdirSync(unzippedFolder)) {
     const ext = isVideo(originalFileName) ? ".mp4" : ".png";
     const newFileName = mediaNameWithoutExtention(originalFileName) + ext;
     const newFileNameWidthPath = path.resolve(outputFolder, newFileName);
 
     if (!fs.existsSync(newFileNameWidthPath)) {
-      console.log("I TRY TO RESIZE THIS VIDEO / IMAGE");
-      console.log(`    originalFileName===${originalFileName}`);
-      console.log("    if there is an error maybe a file is broken, so remove this file maybe");
-      console.log(`    Go to the folder: ${inputFolder}`);
-      console.log(`    and remove file: ${originalFileName}`, "\n");
+      console.log(`I TRY TO RESIZE: ${originalFileName}`);
+      // console.log("    if there is an error maybe a file is broken, so remove this file maybe");
+      // console.log(`    Go to the folder: ${unzippedFolder}`);
+      // console.log(`    and remove file: ${originalFileName}`, "\n");
 
       if (isVideo(originalFileName)) {
         // TASK 2 - process videos
 
-        await resizeVideo(inputFolder, outputFolder, originalFileName, newFileName, mediaWidth);
+        await resizeVideo(unzippedFolder, outputFolder, originalFileName, newFileName, mediaWidth);
       } else {
         // TASK 3 - process images
-        const ImageObjectFromSharp = await sharp(path.resolve(inputFolder, originalFileName)).resize(mediaWidth).png().toBuffer();
+        const ImageObjectFromSharp = await sharp(path.resolve(unzippedFolder, originalFileName))
+          // .resize(mediaWidth) michal
+          .png()
+          .toBuffer();
         fs.writeFileSync(newFileNameWidthPath, ImageObjectFromSharp);
       }
     }
   }
-  console.log(`ALL FILES RESIZED:`, `--- NEW WIDTH ==> ${mediaWidth}px`, `--- FROM FOLDER ==> ${inputFolder}`, `--- TO FOLDER ==> ${outputFolder}`);
+  console.log(
+    `ALL FILES RESIZED:`,
+    `--- NEW WIDTH ==> ${mediaWidth}px`,
+    `--- FROM FOLDER ==> ${unzippedFolder}`,
+    `--- TO FOLDER ==> ${outputFolder}`
+  );
 };
 
-const resizeVideo = async (inputFolder: string, outputFolder: string, originalFileName: string, newFileName: string, width: number): Promise<string> => {
+const resizeVideo = async (
+  inputFolder: string,
+  outputFolder: string,
+  originalFileName: string,
+  newFileName: string,
+  width: number
+): Promise<string> => {
   return new Promise((resolve, reject) => {
     const fileToProcess = path.resolve(inputFolder, originalFileName);
 
@@ -55,7 +67,7 @@ const resizeVideo = async (inputFolder: string, outputFolder: string, originalFi
         .output(output)
         .on("end", () => resolve(newFileName))
         .on("error", (err: any) => reject())
-        .size(`${width}x?`)
+        // .size(`${width}x?`) // michal
         .run();
     });
   });
