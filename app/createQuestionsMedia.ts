@@ -8,7 +8,7 @@ import { getEnv, isVideo, mediaNameWithoutExtention } from "./utils";
 export const resizeMedia = async () => {
   const mediaWidth = +getEnv("TRANSFORMED_MEDIA_WIDTH");
   const unzippedFolder = path.resolve(__dirname, "../", getEnv("FOLDER_WITH_UNZIPPED_FILES"));
-  const outputFolder = path.resolve(__dirname, "../", getEnv("FOLDER_WITH_PROCESSED_FILES"));
+  const outputFolder = path.resolve(__dirname, "../", getEnv("FOLDER_WITH_PROCESSED_FILES"), `size-${mediaWidth}`);
 
   fs.ensureDirSync(unzippedFolder);
   fs.ensureDirSync(outputFolder);
@@ -32,7 +32,7 @@ export const resizeMedia = async () => {
       } else {
         // TASK 3 - process images
         const ImageObjectFromSharp = await sharp(path.resolve(unzippedFolder, originalFileName))
-          // .resize(mediaWidth) michal
+          .resize(mediaWidth) // michal
           .png()
           .toBuffer();
         fs.writeFileSync(newFileNameWidthPath, ImageObjectFromSharp);
